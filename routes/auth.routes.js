@@ -14,4 +14,3 @@ router.get('/correctL', correctRoutes)
 router.get('/toma', obtenerDatos)
 
 module.exports = router;
-
