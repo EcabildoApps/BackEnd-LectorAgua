@@ -34,3 +34,5 @@ exports.obtenerDatos = async (req, res) => {
         return res.status(500).json({ message: 'Error del servidor.', error: error.message || error });
     }
 };
+
+
