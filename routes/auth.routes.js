@@ -6,7 +6,7 @@ const { cuentaRoutes } = require('../controllers/speedread.controller');
 const { correctRoutes } = require('../controllers/correctread.controller');
 const { obtenerDatos } = require('../controllers/toma.controller');
 const { guardarTomaLectura } = require('../controllers/guardarToma.controller');
-const { obtenerLecturas, guardarLectura } = require('../controllers/lecturas.controller');  
+const { obtenerLecturas, guardarLectura, obtenerCatalogo } = require('../controllers/lecturas.controller');  
 
 
 
@@ -18,7 +18,8 @@ router.get('/correctL', correctRoutes)
 router.get('/toma', obtenerDatos)
 router.post('/guardarTomaLectura', guardarTomaLectura)
 
-router.get('/lecturas', obtenerLecturas);  // Ruta para obtener lecturas
-router.post('/lecturas', guardarLectura);  // Ruta para guardar lecturas
+router.get('/lecturas', obtenerLecturas); 
+router.post('/lecturas', guardarLectura);
+router.get('/catalogo', obtenerCatalogo); 
 
 module.exports = router;
