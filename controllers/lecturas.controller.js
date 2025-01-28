@@ -76,33 +76,53 @@ exports.guardarLectura = async (req, res) => {
     }
 };
 
-exports.obtenerCatalofoCausas = async (req, res) => {
+exports.obtenerNovedades = async (req, res) => {
 
-
-
-};
-
-
-exports.obtenerCatalogo = async (req, res) => {
     try {
 
 
         // Realizar la consulta a la base de datos Oracle
         const result = await db.sequelize.query(
-            `SELECT REN21CODI, REN20CODI FROM REN21`, {
+            `SELECT REN21CODI, REN21DESC, REN20CODI FROM REN21 WHERE REN20CODI = '323'`, {
             type: db.Sequelize.QueryTypes.SELECT
         }
         );
 
         // Devolver los resultados de la consulta en formato JSON
         return res.status(200).json({
-            message: 'Codigos obtenidas correctamente.',
+            message: 'Novedades obtenidas correctamente.',
             data: result
         });
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'Error al obtener las codigos.', error });
+        return res.status(500).json({ message: 'Error al obtener las novedades.', error });
+    }
+
+
+};
+
+
+exports.obtenercausas = async (req, res) => {
+    try {
+
+
+        // Realizar la consulta a la base de datos Oracle
+        const result = await db.sequelize.query(
+            `SELECT REN21CODI, REN21DESC, REN20CODI FROM REN21 WHERE REN20CODI = '627'`, {
+            type: db.Sequelize.QueryTypes.SELECT
+        }
+        );
+
+        // Devolver los resultados de la consulta en formato JSON
+        return res.status(200).json({
+            message: 'Causas obtenidas correctamente.',
+            data: result
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error al obtener las causas.', error });
     }
 
 };
