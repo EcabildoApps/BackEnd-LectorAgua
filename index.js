@@ -3,15 +3,20 @@ const express = require('express');
 const app = express();
 const db = require('./models');
 const cors = require('cors');
-const authRoutes = require('./routes/auth.routes'); // Rutas importadas correctamente
+const authRoutes = require('./routes/auth.routes');
 
 app.use(cors());
 
-// Middleware para analizar JSON
 app.use(express.json());
 
 // Rutas
 app.use('/api/auth', authRoutes);
+
+app.use((req, res, next) => {
+    console.log('Received request:', req.method, req.url);
+    next();
+});
+
 
 // Iniciar servidor
 app.listen(port, () => {
@@ -20,7 +25,7 @@ app.listen(port, () => {
 
 // Conectar con la base de datos
 db.sequelize
-    .sync({ force: false }) // Cambié `force: true` a `force: false` para evitar borrar la base de datos al reiniciar el servidor
+    .sync({ force: false })
     .then(() => {
         console.log('Conexión establecida correctamente.');
     })
