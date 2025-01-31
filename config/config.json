@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "ERPSPP",
-    "password": "20252026",
+    "username": "MOVIL",
+    "password": "PELILEO2",
     "database": "ECABILDO",
-    "host": "192.168.0.8",
+    "host": "192.168.69.44",
     "dialect": "oracle"
   },
   "test": {
