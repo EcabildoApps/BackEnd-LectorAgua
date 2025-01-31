@@ -1,0 +1,90 @@
+'use strict';
+
+const db = require('../models');
+const multer = require('multer');
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
+
+if (!fs.existsSync('uploads')) {
+    fs.mkdirSync('uploads');
+}
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 } // Límite 5MB
+});
+
+exports.guardarImagenes = async (req, res) => {
+    upload.single('file')(req, res, async (err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error al cargar el archivo.', error: err.message });
+        }
+
+        const { IDCUENTA, TIPO_IMG, RUTA } = req.body;
+
+        if (!req.file) {
+            return res.status(400).json({ message: 'No se ha recibido un archivo.' });
+        }
+
+        try {
+            const imagenPath = req.file.path;
+            const imagenTipo = path.extname(imagenPath).substring(1);
+
+            // Limitar longitud de las cadenas
+            const MAX_PATH_LENGTH = 255;
+            const MAX_TYPE_LENGTH = 10;
+            const MAX_RUTA_LENGTH = 100;
+
+            const pathImg = imagenPath.slice(0, MAX_PATH_LENGTH);
+            const tipoImg = imagenTipo.slice(0, MAX_TYPE_LENGTH);
+            const ruta = RUTA.slice(0, MAX_RUTA_LENGTH);
+
+            // Convertir la imagen en buffer y luego a hexadecimal
+            const imagenBuffer = await sharp(imagenPath)
+                .resize({ width: 100 })
+                .jpeg({ quality: 80 })
+                .toBuffer();
+
+            const imagenHex = imagenBuffer.toString('hex'); // Convertimos a hexadecimal
+
+            // Obtener fecha actual en formato adecuado para Oracle
+            const fechaActual = new Date();
+            const fechaFormato = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(fechaActual.getDate()).padStart(2, '0')} ${String(fechaActual.getHours()).padStart(2, '0')}:${String(fechaActual.getMinutes()).padStart(2, '0')}:${String(fechaActual.getSeconds()).padStart(2, '0')}`;
+
+            // Insertar en la base de datos
+            const query = `
+                INSERT INTO ERPSPP.AGUALEC_APP_IMG (
+                    ID_AGUALEC_APP_IMG, BYTE_IMG, FECHA_MODIFICACION, FECHA_REGISTRO, PATH_IMG, TIPO_IMG, RUTA, IDCUENTA
+                ) VALUES (
+                    (SELECT COALESCE(MAX(ID_AGUALEC_APP_IMG), 0) + 1 FROM ERPSPP.AGUALEC_APP_IMG),
+                    HEXTORAW('${imagenHex}'), 
+                    TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
+                    TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
+                    '${pathImg}', 
+                    '${tipoImg}', 
+                    '${ruta}', 
+                    ${IDCUENTA}
+                )
+            `;
+
+            await db.sequelize.query(query, {
+                type: db.Sequelize.QueryTypes.INSERT
+            });
+
+            return res.status(200).json({ message: 'Imagen guardada correctamente.' });
+        } catch (error) {
+            console.error('Error al guardar la imagen:', error);
+            return res.status(500).json({ message: 'Error al guardar la imagen.', error: error.message });
+        }
+    });
+};
