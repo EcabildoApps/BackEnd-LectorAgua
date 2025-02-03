@@ -1,17 +1,15 @@
 'use strict';
 
-const db = require('../models'); // Aquí se importa el modelo que contiene la configuración de Sequelize
+const db = require('../models');
 
 exports.obtenerLecturas = async (req, res) => {
     try {
-        // Obtener el parámetro 'ruta' de la query string
         const { ruta } = req.query;
 
         if (!ruta) {
             return res.status(400).json({ message: 'Falta el parámetro ruta.' });
         }
 
-        // Realizar la consulta a la base de datos Oracle
         const result = await db.sequelize.query(
             `SELECT * FROM ERPSPP.AGUALEC_APP WHERE RUTA = :ruta`, {
             replacements: { ruta },
@@ -23,7 +21,6 @@ exports.obtenerLecturas = async (req, res) => {
             return res.status(404).json({ message: 'No se encontraron lecturas para el número de ruta proporcionado.' });
         }
 
-        // Devolver los resultados de la consulta en formato JSON
         return res.status(200).json({
             message: 'Lecturas obtenidas correctamente.',
             data: result
@@ -57,7 +54,6 @@ exports.guardarLectura = async (req, res) => {
             }
         }
 
-        // Asegurar que FTOMA siempre sea NULL
         lectura.FTOMA = null;
 
         const query = `
@@ -146,14 +142,12 @@ exports.obtenerNovedades = async (req, res) => {
     try {
 
 
-        // Realizar la consulta a la base de datos Oracle
         const result = await db.sequelize.query(
             `SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM REN21 WHERE REN20CODI = '323'`, {
             type: db.Sequelize.QueryTypes.SELECT
         }
         );
 
-        // Devolver los resultados de la consulta en formato JSON
         return res.status(200).json({
             message: 'Novedades obtenidas correctamente.',
             data: result
@@ -172,14 +166,12 @@ exports.obtenercausas = async (req, res) => {
     try {
 
 
-        // Realizar la consulta a la base de datos Oracle
         const result = await db.sequelize.query(
             `SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM REN21 WHERE REN20CODI = '627'`, {
             type: db.Sequelize.QueryTypes.SELECT
         }
         );
 
-        // Devolver los resultados de la consulta en formato JSON
         return res.status(200).json({
             message: 'Causas obtenidas correctamente.',
             data: result

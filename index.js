@@ -4,8 +4,12 @@ const app = express();
 const db = require('./models');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
+const path = require('path');
+
 
 app.use(cors());
+
+app.use('/uploadsLogin', express.static(path.join(__dirname, '/uploadsLogin')));
 
 app.use(express.json());
 

@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 } // Límite 5MB
+    limits: { fileSize: 5 * 1024 * 1024 }
 });
 
 exports.guardarImagenes = async (req, res) => {
@@ -40,7 +40,6 @@ exports.guardarImagenes = async (req, res) => {
             const imagenPath = req.file.path;
             const imagenTipo = path.extname(imagenPath).substring(1);
 
-            // Limitar longitud de las cadenas
             const MAX_PATH_LENGTH = 255;
             const MAX_TYPE_LENGTH = 10;
             const MAX_RUTA_LENGTH = 100;
@@ -49,19 +48,16 @@ exports.guardarImagenes = async (req, res) => {
             const tipoImg = imagenTipo.slice(0, MAX_TYPE_LENGTH);
             const ruta = RUTA.slice(0, MAX_RUTA_LENGTH);
 
-            // Convertir la imagen en buffer y luego a hexadecimal
             const imagenBuffer = await sharp(imagenPath)
                 .resize({ width: 100 })
                 .jpeg({ quality: 80 })
                 .toBuffer();
 
-            const imagenHex = imagenBuffer.toString('hex'); // Convertimos a hexadecimal
+            const imagenHex = imagenBuffer.toString('hex');
 
-            // Obtener fecha actual en formato adecuado para Oracle
             const fechaActual = new Date();
             const fechaFormato = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(fechaActual.getDate()).padStart(2, '0')} ${String(fechaActual.getHours()).padStart(2, '0')}:${String(fechaActual.getMinutes()).padStart(2, '0')}:${String(fechaActual.getSeconds()).padStart(2, '0')}`;
 
-            // Insertar en la base de datos
             const query = `
                 INSERT INTO ERPSPP.AGUALEC_APP_IMG (
                     ID_AGUALEC_APP_IMG, BYTE_IMG, FECHA_MODIFICACION, FECHA_REGISTRO, PATH_IMG, TIPO_IMG, RUTA, IDCUENTA
