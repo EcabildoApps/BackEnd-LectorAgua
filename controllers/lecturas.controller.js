@@ -45,7 +45,7 @@ exports.guardarLectura = async (req, res) => {
 
         const requiredFields = [
             'IDCUENTA', 'NRO_CUENTA', 'NRO_MEDIDOR', 'CIU', 'CONSUMIDOR',
-            'CEDULA_RUC', 'PARROQUIA', 'SECTOR', 'RUTA', 'DIRECCION', 'ESTADO', 'STATUS', 'TARIFA'
+            'CEDULA_RUC', 'PARROQUIA', 'SECTOR', 'RUTA', 'ESTADO', 'STATUS', 'TARIFA'
         ];
 
         for (let field of requiredFields) {
@@ -93,9 +93,9 @@ exports.guardarLectura = async (req, res) => {
                 ANIOMES = :ANIOMES,
                 ACTIVO = :ACTIVO,
                 USER_LEC = :USER_LEC,
-                FECHA_LEC =  NULL,
+                FECHA_LEC = TO_DATE(:FECHA_LEC, 'YYYY-MM-DD'),
                 X_LECTURA = :X_LECTURA,
-                Y_LECTURA = :Y_LECTURA,
+                Y_LECTURA = :Y_LECTURA, 
                 X_MEDIDOR = :X_MEDIDOR,
                 Y_MEDIDOR = :Y_MEDIDOR,
                 TIPOCAUSA = :TIPOCAUSA,
@@ -119,7 +119,7 @@ exports.guardarLectura = async (req, res) => {
                 :TARIFA, :ALCANTARILLADO, :LECT_ACTUAL, :LECT_ANTERIOR, :CONSUMO_PROMEDIO, 
                 :CONSUMO_CONTROL_MIN, :CONSUMO_CONTROL_MAX, :CONSUMO, :EXONERACION, 
                 :TERCERA_EDAD, :DISCAPACIDAD, :DEPARTAMENTO, :PISO, :MANZANA, :TIPO, :ANIOMES, 
-                :ACTIVO, :USER_LEC, NULL, :X_LECTURA, :Y_LECTURA, :X_MEDIDOR, :Y_MEDIDOR, 
+                :ACTIVO, :USER_LEC, :FECHA_LEC, :X_LECTURA, :Y_LECTURA, :X_MEDIDOR, :Y_MEDIDOR, 
                 :TIPOCAUSA, :LEC04ID, :FECHA_STRING_LEC, NULL, :PORCENTAGE_CON_PROMEDIO, :TIPONOVEDAD
             )
         `;
