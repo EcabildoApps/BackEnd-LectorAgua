@@ -33,6 +33,7 @@ exports.obtenerLecturas = async (req, res) => {
 };
 
 
+
 exports.guardarLectura = async (req, res) => {
     try {
         let lectura = req.body;

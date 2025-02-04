@@ -30,11 +30,21 @@ exports.guardarImagenes = async (req, res) => {
             return res.status(500).json({ message: 'Error al cargar el archivo.', error: err.message });
         }
 
-        const { IDCUENTA, TIPO_IMG, RUTA } = req.body;
+        const { IDCUENTA, TIPO_IMG, RUTA, DETALLE } = req.body;
 
         if (!req.file) {
             return res.status(400).json({ message: 'No se ha recibido un archivo.' });
         }
+        if (!IDCUENTA || !TIPO_IMG || !RUTA) {
+            return res.status(400).json({ message: 'Faltan parámetros en la solicitud.' });
+        }
+        if (DETALLE && DETALLE.length > 240) {
+            return res.status(400).json({ message: 'El detalle no puede tener más de 240 caracteres.' });
+        }
+
+        const MAX_DETALLE_LENGTH = 240;  // Limitar a 240 caracteres, por ejemplo
+        const detalle = (DETALLE && DETALLE.length > MAX_DETALLE_LENGTH) ? DETALLE.slice(0, MAX_DETALLE_LENGTH) : DETALLE;
+
 
         try {
             const imagenPath = req.file.path;
@@ -60,7 +70,7 @@ exports.guardarImagenes = async (req, res) => {
 
             const query = `
                 INSERT INTO ERPSPP.AGUALEC_APP_IMG (
-                    ID_AGUALEC_APP_IMG, BYTE_IMG, FECHA_MODIFICACION, FECHA_REGISTRO, PATH_IMG, TIPO_IMG, RUTA, IDCUENTA
+                    ID_AGUALEC_APP_IMG, BYTE_IMG, FECHA_MODIFICACION, FECHA_REGISTRO, PATH_IMG, TIPO_IMG, RUTA, DETALLE, IDCUENTA
                 ) VALUES (
                     (SELECT COALESCE(MAX(ID_AGUALEC_APP_IMG), 0) + 1 FROM ERPSPP.AGUALEC_APP_IMG),
                     HEXTORAW('${imagenHex}'), 
@@ -69,6 +79,7 @@ exports.guardarImagenes = async (req, res) => {
                     '${pathImg}', 
                     '${tipoImg}', 
                     '${ruta}', 
+                    ${detalle ? `'${detalle}'` : 'NULL'},
                     ${IDCUENTA}
                 )
             `;
