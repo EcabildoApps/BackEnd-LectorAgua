@@ -9,12 +9,26 @@ exports.login = async (req, res) => {
         }
 
         const user = await db.sequelize.query(
-            `SELECT RUTA, APPROL FROM ERPSPP.AGUAUSER_APP WHERE SEG03CODI = :username AND SEG03CLA = :password;`,
+            `SELECT 
+                A.RUTA, 
+                A.APPROL, 
+                B.TPPREDIO, 
+                B.GEOCODIGO
+            FROM 
+                ERPSPP.AGUAUSER_APP A
+            JOIN 
+                ERPSPP.APP_PREPLANIFICA B
+            ON 
+                A.SEG03CODI = B.SEG03CODI
+            WHERE 
+                A.SEG03CODI = :username
+                AND A.SEG03CLA = :password;`,
             {
                 replacements: { username, password },
                 type: db.Sequelize.QueryTypes.SELECT,
             }
         );
+        
 
         if (user.length === 0) {
             return res.status(404).json({ message: 'Usuario o contraseña incorrectos.' });
