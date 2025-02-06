@@ -6,7 +6,7 @@ const { guardarImagenes } = require('../controllers/enviarlocalRemoto.controller
 
 const { uploadImage, getImage } = require('../controllers/cambioImgLogin.controller');
 
-const {obtenerpredUrb} = require('../controllers/predioUrbano.controller');
+const {obtenerpredUrb, obtenerCatalogos} = require('../controllers/predioUrbano.controller');
 
 
 
@@ -28,5 +28,6 @@ router.get('/getimage', getImage);
 //Rutas para predios urbanos
 
 router.get('/prediosUrb', obtenerpredUrb);
+router.get('/catalogo', obtenerCatalogos);
 
 module.exports = router;
