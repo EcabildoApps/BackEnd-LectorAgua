@@ -6,7 +6,7 @@ const { guardarImagenes } = require('../controllers/enviarlocalRemoto.controller
 
 const { uploadImage, getImage } = require('../controllers/cambioImgLogin.controller');
 
-const {obtenerpredUrb, obtenerCatalogos} = require('../controllers/predioUrbano.controller');
+const {obtenerpredUrb, obtenerCatalogos, obtenerCatalogosConstruccion, obtenerConstruccion} = require('../controllers/predioUrbano.controller');
 
 
 
@@ -29,5 +29,7 @@ router.get('/getimage', getImage);
 
 router.get('/prediosUrb', obtenerpredUrb);
 router.get('/catalogo', obtenerCatalogos);
+router.get('/construccion', obtenerCatalogosConstruccion);
+router.get('/   ', obtenerConstruccion);  
 
 module.exports = router;
