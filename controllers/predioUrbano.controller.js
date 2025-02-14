@@ -164,21 +164,21 @@ exports.obtenerCatalogosConstruccion = async (req, res) => {
 
 exports.obtenerConstruccion = async (req, res) => {
     try {
-        const { PUR01CODI } = req.query;
+        const { TPPREDIO } = req.query;
 
-        if (!PUR01CODI) {
-            return res.status(400).json({ message: 'Falta el parámetro PUR01CODI.' });
+        if (!TPPREDIO) {
+            return res.status(400).json({ message: 'Falta el parámetro TPPREDIO.' });
         }
 
         const result = await db.sequelize.query(
-            `SELECT * FROM ERPSPP.APP_PRE_CONSTRUC WHERE PUR01CODI = :PUR01CODI`, {
-            replacements: { PUR01CODI },
+            `SELECT * FROM ERPSPP.APP_PRE_CONSTRUC WHERE TPPREDIO = :TPPREDIO`, {
+            replacements: { TPPREDIO },
             type: db.Sequelize.QueryTypes.SELECT
         }
         );
 
         if (result.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron datos para el número de PUR01CODI proporcionado.' });
+            return res.status(404).json({ message: 'No se encontraron datos para el número de TPPREDIO proporcionado.' });
         }
 
         return res.status(200).json({
@@ -191,3 +191,4 @@ exports.obtenerConstruccion = async (req, res) => {
         return res.status(500).json({ message: 'Error al obtener las datos.', error });
     }
 };
+

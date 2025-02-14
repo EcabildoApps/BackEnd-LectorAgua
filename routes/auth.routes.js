@@ -30,6 +30,8 @@ router.get('/getimage', getImage);
 router.get('/prediosUrb', obtenerpredUrb);
 router.get('/catalogo', obtenerCatalogos);
 router.get('/construccion', obtenerCatalogosConstruccion);
-router.get('/   ', obtenerConstruccion);  
+router.get('/obtenercontruccion', obtenerConstruccion);  
+
+
 
 module.exports = router;
