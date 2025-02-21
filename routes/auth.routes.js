@@ -8,7 +8,7 @@ const { uploadImage, getImage } = require('../controllers/cambioImgLogin.control
 
 const {obtenerpredUrb, obtenerCatalogos, obtenerCatalogosConstruccion, obtenerConstruccion} = require('../controllers/predioUrbano.controller');
 
-
+const {obtenerpredRur, obtenerCatalogosRur} = require('../controllers/predioRural.controller');
 
 router.post('/login', login);
 router.get('/lecturas', obtenerLecturas); 
@@ -23,6 +23,10 @@ router.post('/upload', uploadImage );
 router.get('/getimage', getImage);
 
 //Rutas para predios rurales
+router.get('/prediosRur', obtenerpredRur);
+router.get('/catalogoRur', obtenerCatalogosRur);
+
+
 
 
 //Rutas para predios urbanos

@@ -51,6 +51,13 @@ exports.login = async (req, res) => {
             });
         }
 
+        if (userRole === 'RUR' ) {
+            return res.status(200).json({
+                message: 'Inicio de sesión exitoso.',
+                user: user[0],
+            });
+        }
+
         // Si el rol no es LEC ni el predio es válido para URB
         return res.status(403).json({ message: 'Acceso denegado: Rol o predio no autorizado.' });
 
