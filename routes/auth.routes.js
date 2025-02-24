@@ -6,9 +6,9 @@ const { guardarImagenes } = require('../controllers/enviarlocalRemoto.controller
 
 const { uploadImage, getImage } = require('../controllers/cambioImgLogin.controller');
 
-const {obtenerpredUrb, obtenerCatalogos, obtenerCatalogosConstruccion, obtenerConstruccion} = require('../controllers/predioUrbano.controller');
+const {obtenerpredUrb, obtenerCatalogos, obtenerCatalogosConstruccion, obtenerConstruccion, guardarPredioUrbano} = require('../controllers/predioUrbano.controller');
 
-const {obtenerpredRur, obtenerCatalogosRur} = require('../controllers/predioRural.controller');
+const {obtenerpredRur, obtenerCatalogosRur, guardarPredioRural} = require('../controllers/predioRural.controller');
 
 router.post('/login', login);
 router.get('/lecturas', obtenerLecturas); 
@@ -25,6 +25,7 @@ router.get('/getimage', getImage);
 //Rutas para predios rurales
 router.get('/prediosRur', obtenerpredRur);
 router.get('/catalogoRur', obtenerCatalogosRur);
+router.post('/prediosRur', guardarPredioRural);
 
 
 
@@ -35,6 +36,8 @@ router.get('/prediosUrb', obtenerpredUrb);
 router.get('/catalogo', obtenerCatalogos);
 router.get('/construccion', obtenerCatalogosConstruccion);
 router.get('/obtenercontruccion', obtenerConstruccion);  
+router.post('/prediosUrb', guardarPredioUrbano);
+
 
 
 

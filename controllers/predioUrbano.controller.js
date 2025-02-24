@@ -192,3 +192,93 @@ exports.obtenerConstruccion = async (req, res) => {
     }
 };
 
+exports.guardarPredioUrbano = async (req, res) => {
+    try {
+        let predio = req.body;
+
+        console.log('Datos recibidos:', predio);
+
+        if (!predio.GFCRE) {
+            const fechaActual = new Date();
+            predio.GFCRE = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(fechaActual.getDate()).padStart(2, '0')} ${String(fechaActual.getHours()).padStart(2, '0')}:${String(fechaActual.getMinutes()).padStart(2, '0')}:${String(fechaActual.getSeconds()).padStart(2, '0')}`;
+        }
+
+        if (!predio.TPPREDIO) {
+            predio.TPPREDIO = 'PU';
+        }
+
+        const requiredFields = [
+            'TPPREDIO', 'PUR01CODI'
+        ];
+
+
+        for (let field of requiredFields) {
+            if (predio[field] === null || predio[field] === undefined) {
+                return res.status(400).json({ message: `Falta el campo ${field} en el predio.` });
+            }
+        }
+
+        const query = `
+        MERGE INTO APP_PRE_CONSTRUC t
+        USING (SELECT :GID AS GID FROM DUAL) s
+        ON (t.GID = s.GID)
+        WHEN MATCHED THEN
+            UPDATE SET 
+                PROVINCIA = :PROVINCIA,
+                CANTON = :CANTON,
+                PARROQUIA = :PARROQUIA,
+                ZONA = :ZONA,
+                SECTOR = :SECTOR,
+                MANZANA = :MANZANA,
+                NPREDIO = :NPREDIO,
+                CLAVE_CATASTRAL = :CLAVE_CATASTRAL,
+                BLOQUE = :BLOQUE,
+                PISO = :PISO,
+                GIDLOTE = :GIDLOTE,
+                AREABLGIS = :AREABLGIS,
+                PUR01CODI = :PUR01CODI,
+                PUR05CODI = :PUR05CODI,
+                GANIOC = :GANIOC,
+                GAREPAR = :GAREPAR,
+                GACONS = :GACONS,
+                GAREAL = :GAREAL,
+                GESTRUCTURA = :GESTRUCTURA,
+                GESTADOCONS = :GESTADOCONS,
+                GPORREPARA = :GPORREPARA,
+                GESTADO = :GESTADO,
+                OBS = :OBS,
+                GLCRE = :GLCRE,
+                GFCRE = :GFCRE,
+                VALIDO = :VALIDO,
+                MARCA = :MARCA,
+                IDPREDIOLOCALMENTE = :IDPREDIOLOCALMENTE,
+                IDPREDIOCONST = :IDPREDIOCONST
+        WHEN NOT MATCHED THEN
+            INSERT (
+                TPPREDIO, GID, PROVINCIA, CANTON, PARROQUIA, ZONA, SECTOR, 
+                MANZANA, NPREDIO, CLAVE_CATASTRAL, BLOQUE, PISO, GIDLOTE, 
+                AREABLGIS, PUR01CODI, PUR05CODI, GANIOC, GAREPAR, GACONS, 
+                GAREAL, GESTRUCTURA, GESTADOCONS, GPORREPARA, GESTADO, OBS, 
+                GLCRE, GFCRE, VALIDO, MARCA, IDPREDIOLOCALMENTE, IDPREDIOCONST
+            ) VALUES (
+                :TPPREDIO, :GID, :PROVINCIA, :CANTON, :PARROQUIA, :ZONA, :SECTOR, 
+                :MANZANA, :NPREDIO, :CLAVE_CATASTRAL, :BLOQUE, :PISO, :GIDLOTE, 
+                :AREABLGIS, :PUR01CODI, :PUR05CODI, :GANIOC, :GAREPAR, :GACONS, 
+                :GAREAL, :GESTRUCTURA, :GESTADOCONS, :GPORREPARA, :GESTADO, :OBS, 
+                :GLCRE, NULL, :VALIDO, :MARCA, 
+                :IDPREDIOLOCALMENTE, :IDPREDIOCONST
+            )
+        `;
+
+        console.log('Datos para la consulta:', predio);
+        await db.sequelize.query(query, { replacements: predio });
+
+
+        return res.status(200).json({ message: 'Predio guardado correctamente.' });
+    } catch (error) {
+        console.error('Error en el servidor:', error);
+        return res.status(500).json({ message: 'Error al guardar el predio.', error });
+    }
+};
+
+
