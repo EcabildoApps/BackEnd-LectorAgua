@@ -59,36 +59,65 @@ exports.guardarImagenes = async (req, res) => {
             const ruta = RUTA.slice(0, MAX_RUTA_LENGTH);
 
             const imagenBuffer = await sharp(imagenPath)
-                .resize({ width: 100 })
-                .jpeg({ quality: 80 })
+                .resize({ width: 80 })  // Mantener un tamaño decente
+                .jpeg({ quality: 80 })  // Mejor calidad sin ser excesiva
                 .toBuffer();
+
 
             const imagenHex = imagenBuffer.toString('hex');
 
             const fechaActual = new Date();
             const fechaFormato = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(fechaActual.getDate()).padStart(2, '0')} ${String(fechaActual.getHours()).padStart(2, '0')}:${String(fechaActual.getMinutes()).padStart(2, '0')}:${String(fechaActual.getSeconds()).padStart(2, '0')}`;
 
-            const query = `
-                INSERT INTO ERPSPP.AGUALEC_APP_IMG (
-                    ID_AGUALEC_APP_IMG, BYTE_IMG, FECHA_MODIFICACION, FECHA_REGISTRO, PATH_IMG, TIPO_IMG, RUTA, DETALLE, IDCUENTA
-                ) VALUES (
-                    (SELECT COALESCE(MAX(ID_AGUALEC_APP_IMG), 0) + 1 FROM ERPSPP.AGUALEC_APP_IMG),
-                    HEXTORAW('${imagenHex}'), 
-                    TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
-                    TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
-                    '${pathImg}', 
-                    '${tipoImg}', 
-                    '${ruta}', 
-                    ${detalle ? `'${detalle}'` : 'NULL'},
-                    ${IDCUENTA}
-                )
+            const checkQuery = `
+                SELECT ID_AGUALEC_APP_IMG FROM ERPSPP.AGUALEC_APP_IMG WHERE IDCUENTA = ${IDCUENTA}
             `;
-
-            await db.sequelize.query(query, {
-                type: db.Sequelize.QueryTypes.INSERT
+            const existingImage = await db.sequelize.query(checkQuery, {
+                type: db.Sequelize.QueryTypes.SELECT
             });
 
-            return res.status(200).json({ message: 'Imagen guardada correctamente.' });
+            if (existingImage.length > 0) {
+                // Si ya existe, actualizar la imagen existente
+                const updateQuery = `
+                    UPDATE ERPSPP.AGUALEC_APP_IMG
+                    SET BYTE_IMG = HEXTORAW('${imagenHex}'), 
+                        FECHA_MODIFICACION = TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
+                        PATH_IMG = '${pathImg}',
+                        TIPO_IMG = '${tipoImg}',
+                        RUTA = '${ruta}',
+                        DETALLE = ${detalle ? `'${detalle}'` : 'NULL'}
+                    WHERE IDCUENTA = ${IDCUENTA}
+                `;
+                await db.sequelize.query(updateQuery, {
+                    type: db.Sequelize.QueryTypes.UPDATE
+                });
+
+                return res.status(200).json({ message: 'Imagen reemplazada correctamente.' });
+
+            } else {
+                // Si no existe, insertar una nueva imagen
+                const insertQuery = `
+                    INSERT INTO ERPSPP.AGUALEC_APP_IMG (
+                        ID_AGUALEC_APP_IMG, BYTE_IMG, FECHA_MODIFICACION, FECHA_REGISTRO, PATH_IMG, TIPO_IMG, RUTA, DETALLE, IDCUENTA
+                    ) VALUES (
+                        (SELECT COALESCE(MAX(ID_AGUALEC_APP_IMG), 0) + 1 FROM ERPSPP.AGUALEC_APP_IMG),
+                        HEXTORAW('${imagenHex}'), 
+                        TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
+                        TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
+                        '${pathImg}', 
+                        '${tipoImg}', 
+                        '${ruta}', 
+                        ${detalle ? `'${detalle}'` : 'NULL'},
+                        ${IDCUENTA}
+                    )
+                `;
+
+                await db.sequelize.query(insertQuery, {
+                    type: db.Sequelize.QueryTypes.INSERT
+                });
+
+                return res.status(200).json({ message: 'Imagen guardada correctamente.' });
+            }
         } catch (error) {
             console.error('Error al guardar la imagen:', error);
             return res.status(500).json({ message: 'Error al guardar la imagen.', error: error.message });
