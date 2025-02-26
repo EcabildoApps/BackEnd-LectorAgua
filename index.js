@@ -7,7 +7,12 @@ const authRoutes = require('./routes/auth.routes');
 const path = require('path');
 
 
-app.use(cors());
+app.use(cors({
+    origin: '*',  // Permite solicitudes desde cualquier origen
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Métodos HTTP permitidos
+    allowedHeaders: ['Content-Type', 'Authorization']  // Cabeceras permitidas
+}));
+
 
 app.use('/uploadsLogin', express.static(path.join(__dirname, '/uploadsLogin')));
 
