@@ -5,6 +5,7 @@ const db = require('./models');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const path = require('path');
+require('dotenv').config();
 
 
 app.use(cors({
@@ -29,7 +30,7 @@ app.use((req, res, next) => {
 
 // Iniciar servidor
 app.listen(port, () => {
-    console.log(`Servidor corriendo en puerto: ${port}`);
+    console.log(`Servidor corriendo en puerto: ${port} en modo ${process.env.NODE_ENV}`);
 });
 
 // Conectar con la base de datos
