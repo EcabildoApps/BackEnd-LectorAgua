@@ -192,16 +192,133 @@ exports.obtenerConstruccion = async (req, res) => {
     }
 };
 
+exports.guardarPredios = async (req, res) => {
+    try {
+        let predio = req.body;
+        console.log('Datos recibidos:', predio);
+
+        const fechaGFCRE = new Date(predio.GFCRE).toISOString().split('T')[0];  // Solo fecha (sin hora)
+        console.log("Fecha de GFCRE:", fechaGFCRE);
+
+        // Definir los campos requeridos para validar
+        const requiredFields = [
+         'PUR01CODI',
+        ];
+
+        // Validar que todos los campos requeridos estén en el objeto 'predio'
+        for (let field of requiredFields) {
+            if (!predio[field]) {
+                return res.status(400).json({ message: `Falta el campo ${field} en el predio.` });
+            }
+        }
+
+        // Construir la consulta SQL para insertar o actualizar el predio
+        const query = `
+            MERGE INTO ERPSPP.APP_PURPRED t
+            USING (SELECT :GID AS GID FROM DUAL) s
+            ON (t.GID = s.GID)
+            WHEN MATCHED THEN
+                UPDATE SET 
+                    PROVINCIA = :PROVINCIA,
+                    CANTON = :CANTON,
+                    PARROQUIA = :PARROQUIA,
+                    ZONA = :ZONA,
+                    SECTOR = :SECTOR,
+                    MANZANA = :MANZANA,
+                    PREDIO = :PREDIO,
+                    GEOCODIGO = :GEOCODIGO,
+                    CLAVE_CATASTRAL = :CLAVE_CATASTRAL,
+                    CLAVE_ANTERIOR = :CLAVE_ANTERIOR,
+                    BLOQUE = :BLOQUE,
+                    PISO = :PISO,
+                    DPTO = :DPTO,
+                    AREAESCR = :AREAESCR,
+                    PUR01CODI = :PUR01CODI,
+                    GURBANIZA = :GURBANIZA,
+                    GCALLEPRI = :GCALLEPRI,
+                    GNROCASA = :GNROCASA,
+                    GCALLESECUN = :GCALLESECUN,
+                    GRESOLUCION = :GRESOLUCION,
+                    GPROANTE = :GPROANTE,
+                    GCALL1 = :GCALL1,
+                    GCALL2 = :GCALL2,
+                    GCALL3 = :GCALL3,
+                    GCALL4 = :GCALL4,
+                    GALICTA = :GALICTA,
+                    GALICTA_TER = :GALICTA_TER,
+                    GESTA = :GESTA,
+                    GFCRE = TO_DATE('${fechaGFCRE}', 'YYYY-MM-DD'),
+                    GLCREA = :GLCREA,
+                    GTIPO = :GTIPO,
+                    GOCUPACION = :GOCUPACION,
+                    GCARACTERE = :GCARACTERE,
+                    GTOPOGRAFIA = :GTOPOGRAFIA,
+                    GLOCALIZA = :GLOCALIZA,
+                    GFORMA = :GFORMA,
+                    GAGUA = :GAGUA,
+                    GEELE = :GEELE,
+                    GBORDILLO = :GBORDILLO,
+                    GACERA = :GACERA,
+                    GALCCAN = :GALCCAN,
+                    GTEPRI = :GTEPRI,
+                    GRBASUDOMI = :GRBASUDOMI,
+                    GRBASUCALLE = :GRBASUCALLE,
+                    GABAAGU = :GABAAGU,
+                    GALUMBPUB = :GALUMBPUB,
+                    GMEDENERGIA = :GMEDENERGIA,
+                    GAGUAMEDIDOR = :GAGUAMEDIDOR,
+                    GNROPERSONA = :GNROPERSONA,
+                    GVIASUSO = :GVIASUSO,
+                    GVIASMATE = :GVIASMATE,
+                    GLONGITUD = :GLONGITUD,
+                    GPERIMETRI = :GPERIMETRI,
+                    GFONDRELA = :GFONDRELA,
+                    OGESTADO = :OGESTADO,
+                    GTENENCIA = :GTENENCIA,
+                    GDOMINIO = :GDOMINIO,
+                    MOTIVO = :MOTIVO,
+                    NROCEDULA = :NROCEDULA,
+                    APELLIDOS = :APELLIDOS,
+                    NOMBRES = :NOMBRES,
+                    TELEFONO = :TELEFONO,
+                    MARCA = :MARCA,
+                    IDPREDIOURBANO = :IDPREDIOURBANO
+            WHEN NOT MATCHED THEN
+                INSERT (
+                    GID, PROVINCIA, CANTON, PARROQUIA, ZONA, SECTOR, MANZANA, PREDIO, GEOCODIGO, CLAVE_CATASTRAL, CLAVE_ANTERIOR, BLOQUE, PISO, DPTO, AREAESCR, PUR01CODI, GURBANIZA,
+                    GCALLEPRI, GNROCASA, GCALLESECUN, GRESOLUCION, GPROANTE, GCALL1, GCALL2, GCALL3, GCALL4, GALICTA, GALICTA_TER, GESTA, GFCRE, GLCREA, GTIPO, GOCUPACION, GCARACTERE,
+                    GTOPOGRAFIA, GLOCALIZA, GFORMA, GAGUA, GEELE, GBORDILLO, GACERA, GALCCAN, GTEPRI, GRBASUDOMI, GRBASUCALLE, GABAAGU, GALUMBPUB, GMEDENERGIA, GAGUAMEDIDOR, GNROPERSONA,
+                    GVIASUSO, GVIASMATE, GLONGITUD, GPERIMETRI, GFONDRELA, OGESTADO, GTENENCIA, GDOMINIO, MOTIVO, NROCEDULA, APELLIDOS, NOMBRES, TELEFONO, MARCA, IDPREDIOURBANO
+                ) VALUES (
+                    :GID, :PROVINCIA, :CANTON, :PARROQUIA, :ZONA, :SECTOR, :MANZANA, :PREDIO, :GEOCODIGO, :CLAVE_CATASTRAL, :CLAVE_ANTERIOR, :BLOQUE, :PISO, :DPTO, :AREAESCR, :PUR01CODI,
+                    :GURBANIZA, :GCALLEPRI, :GNROCASA, :GCALLESECUN, :GRESOLUCION, :GPROANTE, :GCALL1, :GCALL2, :GCALL3, :GCALL4, :GALICTA, :GALICTA_TER, :GESTA,  TO_DATE('${fechaGFCRE}', 'YYYY-MM-DD'), :GLCREA, :GTIPO,
+                    :GOCUPACION, :GCARACTERE, :GTOPOGRAFIA, :GLOCALIZA, :GFORMA, :GAGUA, :GEELE, :GBORDILLO, :GACERA, :GALCCAN, :GTEPRI, :GRBASUDOMI, :GRBASUCALLE, :GABAAGU, :GALUMBPUB,
+                    :GMEDENERGIA, :GAGUAMEDIDOR, :GNROPERSONA, :GVIASUSO, :GVIASMATE, :GLONGITUD, :GPERIMETRI, :GFONDRELA, :OGESTADO, :GTENENCIA, :GDOMINIO, :MOTIVO, :NROCEDULA, :APELLIDOS,
+                    :NOMBRES, :TELEFONO, :MARCA, :IDPREDIOURBANO
+                )
+        `;
+
+        // Ejecutar la consulta
+        console.log('Datos para la consulta:', predio);
+        await db.sequelize.query(query, { replacements: predio });
+
+        return res.status(200).json({ message: 'Predio guardado correctamente.' });
+    } catch (error) {
+        console.error('Error en el servidor:', error);
+        return res.status(500).json({ message: 'Error al guardar el predio.', error: error.message });
+    }
+};
+
+
 exports.guardarPredioUrbano = async (req, res) => {
     try {
         let predio = req.body;
 
         console.log('Datos recibidos:', predio);
 
-        if (!predio.GFCRE) {
+
             const fechaActual = new Date();
-            predio.GFCRE = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(fechaActual.getDate()).padStart(2, '0')} ${String(fechaActual.getHours()).padStart(2, '0')}:${String(fechaActual.getMinutes()).padStart(2, '0')}:${String(fechaActual.getSeconds()).padStart(2, '0')}`;
-        }
+            const fechaGFCRE = new Date(predio.GFCRE).toISOString().split('T')[0]; 
 
         if (!predio.TPPREDIO) {
             predio.TPPREDIO = 'PU';
@@ -248,7 +365,7 @@ exports.guardarPredioUrbano = async (req, res) => {
                 GESTADO = :GESTADO,
                 OBS = :OBS,
                 GLCRE = :GLCRE,
-                GFCRE = :GFCRE,
+                GFCRE = TO_DATE('${fechaGFCRE}', 'YYYY-MM-DD'),
                 VALIDO = :VALIDO,
                 MARCA = :MARCA,
                 IDPREDIOLOCALMENTE = :IDPREDIOLOCALMENTE,
@@ -265,7 +382,7 @@ exports.guardarPredioUrbano = async (req, res) => {
                 :MANZANA, :NPREDIO, :CLAVE_CATASTRAL, :BLOQUE, :PISO, :GIDLOTE, 
                 :AREABLGIS, :PUR01CODI, :PUR05CODI, :GANIOC, :GAREPAR, :GACONS, 
                 :GAREAL, :GESTRUCTURA, :GESTADOCONS, :GPORREPARA, :GESTADO, :OBS, 
-                :GLCRE, NULL, :VALIDO, :MARCA, 
+                :GLCRE, TO_DATE('${fechaGFCRE}', 'YYYY-MM-DD'), :VALIDO, :MARCA, 
                 :IDPREDIOLOCALMENTE, :IDPREDIOCONST
             )
         `;

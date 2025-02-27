@@ -154,10 +154,8 @@ exports.guardarPredioRural = async (req, res) => {
 
         console.log('Datos recibidos:', predio);
 
-        if (!predio.GFCRE) {
-            const fechaActual = new Date();
-            predio.GFCRE = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(fechaActual.getDate()).padStart(2, '0')} ${String(fechaActual.getHours()).padStart(2, '0')}:${String(fechaActual.getMinutes()).padStart(2, '0')}:${String(fechaActual.getSeconds()).padStart(2, '0')}`;
-        }
+        const fechaGFCRE = new Date(predio.GFCRE).toISOString().split('T')[0];  // Solo fecha (sin hora)
+        console.log("Fecha de GFCRE:", fechaGFCRE);
 
         if (!predio.TPPREDIO) {
             predio.TPPREDIO = 'PR';
@@ -189,6 +187,22 @@ exports.guardarPredioRural = async (req, res) => {
                 NPREDIO = :NPREDIO,
                 CLAVE_CATASTRAL = :CLAVE_CATASTRAL,
                 BLOQUE = :BLOQUE,
+                GACAPISOS = :GACAPISOS,
+                GACAPUER = :GACAPUER,
+                GACATUMB = :GACATUMB,
+                GCLOSER = :GCLOSER,
+                GCUBIACAB = :GCUBIACAB,
+                GCUBRVENT = :GCUBRVENT,
+                GESCALERAS = :GESCALERAS,
+                GESTCOLU = :GESTCOLU,
+                GESTCUBIER = :GESTCUBIER,
+                GESTEPISO = :GESTEPISO,
+                GESTPARE = :GESTPARE,
+                GESTVIGAS = :GESTVIGAS,
+                GINBANIOS = :GINBANIOS,
+                GISANI = :GISANI,
+                GREVESCA = :GREVESCA,
+                GREVINTERIOR = :GREVINTERIOR,
                 PISO = :PISO,
                 GIDLOTE = :GIDLOTE,
                 AREABLGIS = :AREABLGIS,
@@ -204,7 +218,7 @@ exports.guardarPredioRural = async (req, res) => {
                 GESTADO = :GESTADO,
                 OBS = :OBS,
                 GLCRE = :GLCRE,
-                GFCRE = :GFCRE,
+                GFCRE = TO_DATE('${fechaGFCRE}', 'YYYY-MM-DD'),
                 VALIDO = :VALIDO,
                 MARCA = :MARCA,
                 IDPREDIOLOCALMENTE = :IDPREDIOLOCALMENTE,
@@ -221,7 +235,7 @@ exports.guardarPredioRural = async (req, res) => {
                 :MANZANA, :NPREDIO, :CLAVE_CATASTRAL, :BLOQUE, :PISO, :GIDLOTE, 
                 :AREABLGIS, :PUR01CODI, :PUR05CODI, :GANIOC, :GAREPAR, :GACONS, 
                 :GAREAL, :GESTRUCTURA, :GESTADOCONS, :GPORREPARA, :GESTADO, :OBS, 
-                :GLCRE, NULL, :VALIDO, :MARCA, 
+                :GLCRE, TO_DATE('${fechaGFCRE}', 'YYYY-MM-DD'), :VALIDO, :MARCA, 
                 :IDPREDIOLOCALMENTE, :IDPREDIOCONST
             )
         `;
@@ -237,5 +251,123 @@ exports.guardarPredioRural = async (req, res) => {
     }
 };
 
+exports.guardarPrediosRURAL = async (req, res) => {
+    try {
+        let predio = req.body;
+        console.log('Datos recibidos:', predio);
+
+        const fechaGFCRE = new Date(predio.GFCRE).toISOString().split('T')[0];  // Solo fecha (sin hora)
+        console.log("Fecha de GFCRE:", fechaGFCRE);
+
+        // Definir los campos requeridos para validar
+        const requiredFields = [
+            'PRU01CODI',
+        ];
+
+        // Validar que todos los campos requeridos estén en el objeto 'predio'
+        for (let field of requiredFields) {
+            if (!predio[field]) {
+                return res.status(400).json({ message: `Falta el campo ${field} en el predio.` });
+            }
+        }
+
+        // Construir la consulta SQL para insertar o actualizar el predio
+        const query = `
+            MERGE INTO ERPSPP.APP_PRUPRED t
+            USING (SELECT :GID AS GID FROM DUAL) s
+            ON (t.GID = s.GID)
+            WHEN MATCHED THEN
+                UPDATE SET 
+                POLIGONO = :POLIGONO,
+                LOTE = :LOTE,
+                CLAVE_CATASTRAL = :CLAVE_CATASTRAL,
+                CLAVE_ANTERIOR = :CLAVE_ANTERIOR,
+                BLOQUE = :BLOQUE,
+                PISO = :PISO,
+                DPTO = :DPTO,
+                AREAGIS = :AREAGIS,
+                PRU01CODI = :PRU01CODI,
+                GSECTOR = :GSECTOR,
+                GCALLEPRI = :GCALLEPRI,
+                GNROCASA = :GNROCASA,
+                GCALLESECUN = :GCALLESECUN,
+                GRESOLUCION = :GRESOLUCION,
+                GPROANTE = :GPROANTE,
+                GCALLN = :GCALLN,
+                GCALLS = :GCALLS,
+                GCALLE = :GCALLE,
+                GCALLO = :GCALLO,
+                GAREACONS  = :GAREACONS,
+                GALICTA = :GALICTA, 
+                GALICTA_TER = :GALICTA_TER, 
+                GESTA = :GESTA,
+                GFCRE = TO_DATE('${fechaGFCRE}', 'YYYY-MM-DD'),
+                GLCREA = :GLCREA, 
+                GTIPO = :GTIPO,
+                GTPRIESGO = :GTPRIESGO,
+                GDRENAJE = :GDRENAJE, 
+                GTOPOGRAFIA = :GTOPOGRAFIA,
+                GEROSION = :GEROSION,
+                GFORMA = :GFORMA,
+                GPOBLACERCA = :GPOBLACERCA,
+                GORDENVIA = :GORDENVIA,
+                GRIEGO = :GRIEGO,
+                GAGUA = :GAGUA,
+                GEELE = :GEELE,
+                GBORDILLO = :GBORDILLO,
+                GACERA = :GACERA,
+                GALCCAN = :GALCCAN, 
+                GTEPRI = :GTEPRI,
+                GRBASUDOMI = :GRBASUDOMI,
+                GRBASUCALLE = :GRBASUCALLE,
+                GABAAGU = :GABAAGU,
+                GALUMBPUB = :GALUMBPUB,
+                GMEDENERGIA = :GMEDENERGIA,
+                GAGUAMEDIDOR = :GAGUAMEDIDOR,
+                GNROPERSONA = :GNROPERSONA,
+                GVIASUSO = :GVIASUSO,
+                GVIASMATE = :GVIASMATE,
+                GLONGITUD = :GLONGITUD,
+                GPERIMETRI = :GPERIMETRI,
+                GTENENCIA = :GTENENCIA,
+                GDOMINIO = :GDOMINIO,
+                MOTIVO = :MOTIVO,   
+                CLASETIERRA = :CLASETIERRA,
+                ZONAINFLUENCIA = :ZONAINFLUENCIA,
+                PRU30CODI = :PRU30CODI,
+                NROCEDULA = :NROCEDULA,
+                APELLIDOS = :APELLIDOS,
+                NOMBRES = :NOMBRES,
+                TELEFONO = :TELEFONO,
+                MARCA = :MARCA,
+                GEOCODIGO = :GEOCODIGO,
+                IDPREDIORURAL = :IDPREDIORURAL
+                   
+            WHEN NOT MATCHED THEN
+                INSERT (
+                    POLIGONO, LOTE , CLAVE_CATASTRAL, CLAVE_ANTERIOR, BLOQUE, PISO, DPTO, AREAGIS, PRU01CODI, GSECTOR, GCALLEPRI, GNROCASA, GCALLESECUN, GRESOLUCION, GPROANTE, GCALLN,
+                    GCALLS, GCALLE, GCALLO, GAREACONS, GALICTA, GALICTA_TER, GESTA, GFCRE, GLCREA, GTIPO, GTPRIESGO, GDRENAJE, GTOPOGRAFIA, GEROSION, GFORMA, GPOBLACERCA, GORDENVIA,
+                    GRIEGO, GAGUA, GEELE, GBORDILLO, GACERA, GALCCAN, GTEPRI, GRBASUDOMI, GRBASUCALLE, GABAAGU, GALUMBPUB, GMEDENERGIA, GAGUAMEDIDOR, GNROPERSONA, GVIASUSO, GVIASMATE,
+                    GLONGITUD, GPERIMETRI, GTENENCIA, GDOMINIO, MOTIVO, CLASETIERRA, ZONAINFLUENCIA, PRU30CODI, NROCEDULA, APELLIDOS, NOMBRES, TELEFONO, MARCA, GEOCODIGO, IDPREDIORURAL
+
+                ) VALUES (
+                    :POLIGONO, :LOTE, :CLAVE_CATASTRAL, :CLAVE_ANTERIOR, :BLOQUE, :PISO, :DPTO, :AREAGIS, :PRU01CODI, :GSECTOR, :GCALLEPRI, :GNROCASA, :GCALLESECUN, :GRESOLUCION,
+                    :GPROANTE, :GCALLN, :GCALLS, :GCALLE, :GCALLO, :GAREACONS, :GALICTA, :GALICTA_TER, :GESTA, TO_DATE('${fechaGFCRE}', 'YYYY-MM-DD'), :GLCREA, :GTIPO, :GTPRIESGO,
+                    :GDRENAJE, :GTOPOGRAFIA, :GEROSION, :GFORMA, :GPOBLACERCA, :GORDENVIA, :GRIEGO, :GAGUA, :GEELE, :GBORDILLO, :GACERA, :GALCCAN, :GTEPRI, :GRBASUDOMI,
+                    :GRBASUCALLE, :GABAAGU, :GALUMBPUB, :GMEDENERGIA, :GAGUAMEDIDOR, :GNROPERSONA, :GVIASUSO, :GVIASMATE, :GLONGITUD, :GPERIMETRI, :GTENENCIA, :GDOMINIO, :MOTIVO,
+                    :CLASETIERRA, :ZONAINFLUENCIA, :PRU30CODI, :NROCEDULA, :APELLIDOS, :NOMBRES, :TELEFONO, :MARCA, :GEOCODIGO, :IDPREDIORURAL
+                )
+        `;
+
+        // Ejecutar la consulta
+        console.log('Datos para la consulta:', predio);
+        await db.sequelize.query(query, { replacements: predio });
+
+        return res.status(200).json({ message: 'Predio guardado correctamente.' });
+    } catch (error) {
+        console.error('Error en el servidor:', error);
+        return res.status(500).json({ message: 'Error al guardar el predio.', error: error.message });
+    }
+};
 
 
