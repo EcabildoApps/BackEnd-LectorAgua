@@ -29,6 +29,7 @@ app.use((req, res, next) => {
 
 
 // Iniciar servidor
+
 app.listen(port, () => {
     console.log(`Servidor corriendo en puerto: ${port} en modo ${process.env.NODE_ENV}`);
 });
