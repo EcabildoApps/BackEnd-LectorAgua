@@ -1,19 +1,19 @@
 const port = process.env.PORT || 3000;
 const express = require('express');
 const app = express();
-const https = require('https');
-const fs = require('fs');
+/* const https = require('https');
+const fs = require('fs'); */
 const db = require('./models');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const path = require('path');
 require('dotenv').config();
 
-const options = {
+/* const options = {
     key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'), 'utf8'),  
     cert: fs.readFileSync(path.join(__dirname, 'ssl', 'fullchain.pem'), 'utf8')
 };
-
+ */
 
 app.use(cors({
     origin: '*',  // Permite solicitudes desde cualquier origen
@@ -36,8 +36,8 @@ app.use((req, res, next) => {
 
 
 // Iniciar servidor
-https.createServer(options, app).listen(process.env.PORT || 3000, () => {
-    console.log(`Servidor HTTPS corriendo en puerto: ${process.env.PORT || 3000} en modo ${process.env.NODE_ENV}`);
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Servidor HTTP corriendo en puerto: ${process.env.PORT || 3000} en modo ${process.env.NODE_ENV}`);
 });
 
 // Conectar con la base de datos
