@@ -10,8 +10,8 @@ const path = require('path');
 require('dotenv').config();
 
 const options = {
-    key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key')),  // Ruta al archivo de la clave privada
-    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.cert'))  // Ruta al archivo del certificado
+    key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'), 'utf8'),  
+    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'fullchain.pem'), 'utf8')
 };
 
 
