@@ -5,10 +5,10 @@ const { obtenerLecturas, guardarLectura, obtenercausas, obtenerNovedades } = req
 const { guardarImagenes } = require('../controllers/enviarlocalRemoto.controller');
 
 const { uploadImage, getImage } = require('../controllers/cambioImgLogin.controller');
-
 const { obtenerpredUrb, obtenerCatalogos, obtenerCatalogosConstruccion, obtenerConstruccion, guardarPredioUrbano, guardarPredios } = require('../controllers/predioUrbano.controller');
-
 const { obtenerpredRur, obtenerCatalogosRur, guardarPredioRural, guardarPrediosRURAL } = require('../controllers/predioRural.controller');
+
+const {loginC} = require('../controllers/consultas.controller');
 
 router.post('/login', login);
 router.get('/lecturas', obtenerLecturas);
@@ -27,9 +27,6 @@ router.get('/prediosRur', obtenerpredRur);
 router.get('/catalogoRur', obtenerCatalogosRur);
 router.post('/prediosRur', guardarPredioRural);
 router.post('/guardarPRur', guardarPrediosRURAL);
-
-
-
 //Rutas para predios urbanos
 
 router.get('/prediosUrb', obtenerpredUrb);
@@ -39,6 +36,11 @@ router.get('/obtenercontruccion', obtenerConstruccion);
 router.post('/prediosUrb', guardarPredioUrbano);
 router.post('/guardarPUrb', guardarPredios);
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+router.post('/loginConsulta', loginC);
 
 // auth.routes.js o el archivo de rutas que estés usando
 router.get('/testconnection', (req, res) => {
