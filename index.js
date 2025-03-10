@@ -1,15 +1,15 @@
 const port = process.env.PORT || 3000;
 const express = require('express');
 const app = express();
-const https = require('https');
-const fs = require('fs');
+//const https = require('https');
+//const fs = require('fs');
 const db = require('./models');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const path = require('path');
 require('dotenv').config();
 
-const options = {
+/* const options = {
     key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key')),
     cert: fs.readFileSync(path.join(__dirname, 'ssl', 'certificado .crt'))
 };
@@ -20,7 +20,7 @@ if (!options.key || !options.cert) {
 }else{
     console.log("Certificados cargados correctamente.");
 }
-
+ */
 app.use(cors({
     origin: '*',  // Permite solicitudes desde cualquier origen
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Métodos HTTP permitidos
@@ -40,13 +40,18 @@ app.use((req, res, next) => {
     next();
 });
 
-const httpsServer = https.createServer(options, app);
+//const httpsServer = https.createServer(options, app);
 
 
 // Iniciar servidor
-httpsServer.listen(port, () => {
-    console.log(`Servidor HTTPS corriendo en puerto: ${port} en modo ${process.env.NODE_ENV}`);
+//httpsServer.listen(port, () => {
+//    console.log(`Servidor HTTPS corriendo en puerto: ${port} en modo ${process.env.NODE_ENV}`);
+//});
+
+app.listen(port, () => {
+    console.log(`Servidor HTTP corriendo en puerto: ${port} en modo ${process.env.NODE_ENV}`);
 });
+
 // Conectar con la base de datos
 db.sequelize
     .sync({ force: false })
