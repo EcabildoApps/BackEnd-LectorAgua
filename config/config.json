@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "MOVIL",
-    "password": "PELILEO2",
+    "username": "ERPGMPTE",
+    "password": "FIFA2025",
     "database": "ECABILDO",
-    "host": "192.168.69.9",
+    "host": "192.168.10.126",
     "dialect": "oracle"
   },
   "test": {
