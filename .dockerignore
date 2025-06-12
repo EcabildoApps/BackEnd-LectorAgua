@@ -1,4 +1,5 @@
-npm - debug.log
+node_modules
+.env
+npm-debug.log
 uploadsLogin
 uploads
-    .env
