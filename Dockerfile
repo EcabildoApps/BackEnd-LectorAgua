@@ -15,6 +15,8 @@ RUN npm install
 
 COPY . .
 
+COPY oracle_instantclient/instantclient_21_18 /oracle_instantclient/instantclient_21_18
+
 ENV LD_LIBRARY_PATH=/oracle_instantclient/instantclient_21_18
 ENV PATH=/oracle_instantclient/instantclient_21_18:$PATH
 ENV OCI_LIB_DIR=/oracle_instantclient/instantclient_21_18
