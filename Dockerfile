@@ -1,37 +1,37 @@
+# Imagen base de Node.js
 FROM node:18
 
-# Instalar dependencias necesarias para oracledb y sharp
+# Instalar dependencias necesarias del sistema
 RUN apt-get update && apt-get install -y \
-  build-essential \
-  libjpeg-dev \
-  libpng-dev \
-  libwebp-dev \
-  libtiff-dev \
-  libgif-dev \
-  libvips-dev \
   libaio1 \
+  unzip \
   && rm -rf /var/lib/apt/lists/*
 
-# Crear directorio de trabajo
+# Crear el directorio de trabajo
 WORKDIR /usr/src/app
 
-# Copiar package.json e instalar dependencias
+# Copiar los archivos de dependencias
 COPY package*.json ./
+
+# Instalar dependencias de Node.js
 RUN npm install
 
-# Copiar todo el código
+# Copiar el resto del código de la aplicación
 COPY . .
 
-# Copiar instantclient (ya instalado en tu host en /opt/oracle/instantclient_21_18)
-# OJO: Esto asume que estás construyendo desde el host que tiene este folder
-COPY /opt/oracle/instantclient_21_18 /opt/oracle/instantclient_21_18
+# Copiar el Oracle Instant Client al contenedor
+COPY oracle_instantclient /opt/oracle/instantclient_21_18
 
-# Establecer variables de entorno para oracledb
+# Configurar variables de entorno para Oracle Instant Client
 ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_21_18
 ENV PATH=$LD_LIBRARY_PATH:$PATH
 
-# Exportar puerto
+# Aceptar la licencia de Oracle (si fuera necesario usar ciertas funciones avanzadas)
+ENV OCI_LIB_DIR=/opt/oracle/instantclient_21_18
+ENV OCI_INC_DIR=/opt/oracle/instantclient_21_18/sdk/include
+
+# Exponer el puerto que usa tu app (ajústalo si es otro)
 EXPOSE 3000
 
-# Comando de inicio
-CMD ["npm", "start"]
+# Comando de inicio de la app
+CMD ["node", "index.js"]
