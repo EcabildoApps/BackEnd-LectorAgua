@@ -19,19 +19,17 @@ RUN npm install
 # Copiar el resto del código de la aplicación
 COPY . .
 
-# Copiar el Oracle Instant Client al contenedor
-COPY oracle_instantclient /opt/oracle/instantclient_21_18
+# Copiar Oracle Instant Client al contenedor en la ruta correcta
+COPY oracle_instantclient /oracle_instantclient/instantclient_21_18
 
 # Configurar variables de entorno para Oracle Instant Client
-ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_21_18
-ENV PATH=$LD_LIBRARY_PATH:$PATH
+ENV LD_LIBRARY_PATH=/oracle_instantclient/instantclient_21_18:$LD_LIBRARY_PATH
+ENV PATH=/oracle_instantclient/instantclient_21_18:$PATH
+ENV OCI_LIB_DIR=/oracle_instantclient/instantclient_21_18
+ENV OCI_INC_DIR=/oracle_instantclient/instantclient_21_18/sdk/include
 
-# Aceptar la licencia de Oracle (si fuera necesario usar ciertas funciones avanzadas)
-ENV OCI_LIB_DIR=/opt/oracle/instantclient_21_18
-ENV OCI_INC_DIR=/opt/oracle/instantclient_21_18/sdk/include
-
-# Exponer el puerto que usa tu app (ajústalo si es otro)
+# Exponer el puerto que usa la app
 EXPOSE 3000
 
-# Comando de inicio de la app
+# Comando para iniciar la aplicación
 CMD ["node", "index.js"]
