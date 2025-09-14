@@ -9,7 +9,7 @@ exports.loginC = async (req, res) => {
         }
 
         const user = await db.sequelize.query(
-            `SELECT SEG03CODI, SEG03COM FROM ERPSPP.ST_SEG03 WHERE SEG03CODI = :username`,
+            `SELECT SEG03CODI, SEG03COM FROM ERPGMPTE.ST_SEG03 WHERE SEG03CODI = :username`,
             {
                 replacements: { username, },
                 type: db.Sequelize.QueryTypes.SELECT,

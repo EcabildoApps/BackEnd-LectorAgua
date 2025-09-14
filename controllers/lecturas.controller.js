@@ -11,7 +11,7 @@ exports.obtenerLecturas = async (req, res) => {
         }
 
         const result = await db.sequelize.query(
-            `SELECT * FROM ERPSPP.AGUALEC_APP WHERE RUTA = :ruta`, {
+            `SELECT * FROM ERPGMPTE.AGUALEC_APP WHERE RUTA = :ruta`, {
             replacements: { ruta },
             type: db.Sequelize.QueryTypes.SELECT
         }

@@ -15,9 +15,9 @@ exports.login = async (req, res) => {
                 B.TPPREDIO, 
                 B.GEOCODIGO
             FROM 
-                ERPSPP.AGUAUSER_APP A
+                ERPGMPTE.AGUAUSER_APP A
             LEFT JOIN 
-                ERPSPP.APP_PREPLANIFICA B
+                ERPGMPTE.APP_PREPLANIFICA B
             ON 
                 A.SEG03CODI = B.SEG03CODI
             WHERE 

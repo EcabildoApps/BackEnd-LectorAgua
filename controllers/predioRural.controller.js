@@ -11,7 +11,7 @@ exports.obtenerpredRur = async (req, res) => {
         }
 
         const result = await db.sequelize.query(
-            `SELECT * FROM ERPSPP.APP_PRUPRED WHERE POLIGONO = :poligono`, {
+            `SELECT * FROM ERPGMPTE.APP_PRUPRED WHERE POLIGONO = :poligono`, {
             replacements: { poligono },
             type: db.Sequelize.QueryTypes.SELECT
         }
@@ -37,46 +37,46 @@ exports.obtenerCatalogosRur = async (req, res) => {
     try {
         // Consultamos todos los catálogos de una sola vez
         const result = await Promise.all([
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(111)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(111)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(112)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(112)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(0)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(0)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(10)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(10)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(100)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(100)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(101)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(101)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(103)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(103)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(104)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(104)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(106)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(106)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(110)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(110)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(109)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(109)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(113)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(113)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(105)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(105)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             }),
-            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPSPP.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(107)`, {
+            db.sequelize.query(`SELECT REN21CODI, REN21DESC, REN20CODI, REN21SUBF FROM ERPGMPTE.REN21 WHERE REN20CODI = F_CATALOGO_PREDIOS(107)`, {
                 type: db.Sequelize.QueryTypes.SELECT
             })
         ]);
@@ -127,7 +127,7 @@ exports.obtenerConstruccion = async (req, res) => {
         }
 
         const result = await db.sequelize.query(
-            `SELECT * FROM ERPSPP.APP_PRE_CONSTRUC WHERE TPPREDIO = :TPPREDIO`, {
+            `SELECT * FROM ERPGMPTE.APP_PRE_CONSTRUC WHERE TPPREDIO = :TPPREDIO`, {
             replacements: { TPPREDIO },
             type: db.Sequelize.QueryTypes.SELECT
         }
@@ -273,7 +273,7 @@ exports.guardarPrediosRURAL = async (req, res) => {
 
         // Construir la consulta SQL para insertar o actualizar el predio
         const query = `
-            MERGE INTO ERPSPP.APP_PRUPRED t
+            MERGE INTO ERPGMPTE.APP_PRUPRED t
             USING (SELECT :GID AS GID FROM DUAL) s
             ON (t.GID = s.GID)
             WHEN MATCHED THEN

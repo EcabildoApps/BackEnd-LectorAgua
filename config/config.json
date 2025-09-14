@@ -1,9 +1,10 @@
 {
   "development": {
-    "username": "ERPGMPTE",
-    "password": "FIFA2025",
+    "username": "APPMOVIL",
+    "password": "FIFA2028",
     "database": "ECABILDO",
-    "host": "192.168.10.126",
+    "host": "181.113.129.250",
+    "port": 1874,
     "dialect": "oracle"
   },
   "test": {

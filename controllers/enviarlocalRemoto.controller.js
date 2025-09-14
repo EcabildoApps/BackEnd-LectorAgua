@@ -70,7 +70,7 @@ exports.guardarImagenes = async (req, res) => {
             const fechaFormato = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(fechaActual.getDate()).padStart(2, '0')} ${String(fechaActual.getHours()).padStart(2, '0')}:${String(fechaActual.getMinutes()).padStart(2, '0')}:${String(fechaActual.getSeconds()).padStart(2, '0')}`;
 
             const checkQuery = `
-                SELECT ID_AGUALEC_APP_IMG FROM ERPSPP.AGUALEC_APP_IMG WHERE IDCUENTA = ${IDCUENTA}
+                SELECT ID_AGUALEC_APP_IMG FROM ERPGMPTE.AGUALEC_APP_IMG WHERE IDCUENTA = ${IDCUENTA}
             `;
             const existingImage = await db.sequelize.query(checkQuery, {
                 type: db.Sequelize.QueryTypes.SELECT
@@ -79,7 +79,7 @@ exports.guardarImagenes = async (req, res) => {
             if (existingImage.length > 0) {
                 // Si ya existe, actualizar la imagen existente
                 const updateQuery = `
-                    UPDATE ERPSPP.AGUALEC_APP_IMG
+                    UPDATE ERPGMPTE.AGUALEC_APP_IMG
                     SET BYTE_IMG = HEXTORAW('${imagenHex}'), 
                         FECHA_MODIFICACION = TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
                         PATH_IMG = '${pathImg}',
@@ -97,10 +97,10 @@ exports.guardarImagenes = async (req, res) => {
             } else {
                 // Si no existe, insertar una nueva imagen
                 const insertQuery = `
-                    INSERT INTO ERPSPP.AGUALEC_APP_IMG (
+                    INSERT INTO ERPGMPTE.AGUALEC_APP_IMG (
                         ID_AGUALEC_APP_IMG, BYTE_IMG, FECHA_MODIFICACION, FECHA_REGISTRO, PATH_IMG, TIPO_IMG, RUTA, DETALLE, IDCUENTA
                     ) VALUES (
-                        (SELECT COALESCE(MAX(ID_AGUALEC_APP_IMG), 0) + 1 FROM ERPSPP.AGUALEC_APP_IMG),
+                        (SELECT COALESCE(MAX(ID_AGUALEC_APP_IMG), 0) + 1 FROM ERPGMPTE.AGUALEC_APP_IMG),
                         HEXTORAW('${imagenHex}'), 
                         TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
                         TO_DATE('${fechaFormato}', 'YYYY-MM-DD HH24:MI:SS'),
