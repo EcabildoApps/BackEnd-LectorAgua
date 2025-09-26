@@ -230,7 +230,7 @@ exports.obtenercausas = async (req, res) => {
 
 exports.obtenerCoordenadas = async (req, res) => {
     try {
-        // Realizar la consulta para obtener todas las coordenadas (latitud y longitud) que no sean null
+        // Realizarla consulta para obtener todas las coordenadas (latitud y longitud) que no sean null
         const result = await db.sequelize.query(
             `SELECT X_LECTURA AS longitud, Y_LECTURA AS latitud, DIRECCION
              FROM ERPGMPTE.AGUALEC_APP
