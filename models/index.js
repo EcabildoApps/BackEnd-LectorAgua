@@ -7,7 +7,7 @@ const oracledb = require('oracledb');
 //oracledb.initOracleClient({ libDir: 'C:\\oracle\\instantclient_19_25' });
 //oracledb.initOracleClient({ libDir: 'C:\\oracle\\instantclient_19_25' });
 oracledb.initOracleClient({libDir: 'C:\\oracle\\instantclient_19_28'});
-//oracledb.initOracleClient({libDir: '/oracle_instantclient/instantclient_21_18'});
+//oracledb.initOracleClient({libDir: '/oracle_instantclient/instantclient_19_28'});
 const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';

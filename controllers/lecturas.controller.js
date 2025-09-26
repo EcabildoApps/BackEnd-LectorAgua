@@ -230,9 +230,17 @@ exports.obtenercausas = async (req, res) => {
 
 exports.obtenerCoordenadas = async (req, res) => {
     try {
-        // Realizarla consulta para obtener todas las coordenadas (latitud y longitud) que no sean null
+        // Realizar la consulta para obtener las coordenadas (latitud, longitud) y otros campos
         const result = await db.sequelize.query(
-            `SELECT X_LECTURA AS longitud, Y_LECTURA AS latitud, DIRECCION
+            `SELECT 
+                NRO_MEDIDOR, 
+                NRO_CUENTA, 
+                CIU, 
+                CONSUMIDOR, 
+                CEDULA_RUC, 
+                X_LECTURA AS longitud, 
+                Y_LECTURA AS latitud, 
+                DIRECCION
              FROM ERPGMPTE.AGUALEC_APP
              WHERE X_LECTURA IS NOT NULL AND Y_LECTURA IS NOT NULL`, {
             type: db.Sequelize.QueryTypes.SELECT
@@ -243,7 +251,7 @@ exports.obtenerCoordenadas = async (req, res) => {
             return res.status(404).json({ message: 'No se encontraron coordenadas de medidores.' });
         }
 
-        // Devolver las coordenadas (longitud y latitud) y direcciones de todos los medidores
+        // Devolver los resultados con las coordenadas (longitud y latitud) y los campos adicionales
         return res.status(200).json({
             message: 'Coordenadas obtenidas correctamente.',
             data: result
@@ -254,3 +262,4 @@ exports.obtenerCoordenadas = async (req, res) => {
         return res.status(500).json({ message: 'Error al obtener las coordenadas.', error });
     }
 };
+
