@@ -8,7 +8,7 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Faltan datos: username o password.' });
         }
 
-        const user = await db.sequelize.query(
+        const users = await db.sequelize.query(
             `SELECT 
                 A.RUTA, 
                 A.APPROL, 
@@ -29,43 +29,32 @@ exports.login = async (req, res) => {
             }
         );
 
-        if (user.length === 0) {
+        if (users.length === 0) {
             return res.status(404).json({ message: 'Usuario o contraseña incorrectos.' });
         }
 
-        const userRole = user[0].APPROL;
+        // Tomar el rol del primer registro (todos deben tener el mismo rol)
+        const userRole = users[0].APPROL;
 
-        // Validación para el rol LEC (lectura de agua)
-        if (userRole === 'LEC') {
+        // Preparar respuesta agrupando rutas
+        const userData = {
+            username,
+            role: userRole,
+            rutas: users.map(u => ({
+                ruta: u.RUTA,
+                tppredio: u.TPPREDIO,
+                geocodigo: u.GEOCODIGO
+            }))
+        };
+
+        // Validaciones de rol
+        if (['LEC', 'URB', 'RUR', 'ADM'].includes(userRole)) {
             return res.status(200).json({
                 message: 'Inicio de sesión exitoso.',
-                user: user[0],
+                user: userData,
             });
         }
 
-        // Validación para el rol URB (predios urbanos)
-        if (userRole === 'URB' ) {
-            return res.status(200).json({
-                message: 'Inicio de sesión exitoso.',
-                user: user[0],
-            });
-        }
-
-        if (userRole === 'RUR' ) {
-            return res.status(200).json({
-                message: 'Inicio de sesión exitoso.',
-                user: user[0],
-            });
-        }
-
-        if (userRole === 'ADM' ) {
-            return res.status(200).json({
-                message: 'Inicio de sesión exitoso.',
-                user: user[0],
-            });
-        }
-
-        // Si el rol no es LEC ni el predio es válido para URB
         return res.status(403).json({ message: 'Acceso denegado: Rol o predio no autorizado.' });
 
     } catch (error) {

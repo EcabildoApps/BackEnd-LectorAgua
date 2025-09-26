@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { login } = require('../controllers/auth.controller');
-const { obtenerLecturas, guardarLectura, obtenercausas, obtenerNovedades } = require('../controllers/lecturas.controller');
+const { obtenerLecturas, guardarLectura, obtenercausas, obtenerNovedades, obtenerCoordenadas} = require('../controllers/lecturas.controller');
 const { guardarImagenes } = require('../controllers/enviarlocalRemoto.controller');
 
 const { uploadImage, getImage } = require('../controllers/cambioImgLogin.controller');
@@ -16,6 +16,8 @@ router.post('/lecturas', guardarLectura);
 router.get('/causas', obtenercausas);
 router.get('/novedades', obtenerNovedades);
 router.post('/gimagen', guardarImagenes);
+
+router.get('/obtenerCoordenadas', obtenerCoordenadas);
 
 //Cambio de imagenes
 
@@ -46,7 +48,6 @@ router.post('/loginConsulta', loginC);
 router.get('/testconnection', (req, res) => {
     res.status(200).json({ message: 'Conexión exitosa' });
 });
-
 
 
 module.exports = router;
